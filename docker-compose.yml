@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-barbearia
+    environment:
+      MYSQL_ROOT_PASSWORD: MONELFALMA
+      MYSQL_DATABASE: barbeariapro
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - barbearia-network
+    restart: unless-stopped
+
+  barbearia-pro:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: barbearia-pro
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-barbearia:3306/barbeariapro?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: MONELFALMA
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: 'true'
+    networks:
+      - barbearia-network
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+
+networks:
+  barbearia-network:
+    driver: bridge
