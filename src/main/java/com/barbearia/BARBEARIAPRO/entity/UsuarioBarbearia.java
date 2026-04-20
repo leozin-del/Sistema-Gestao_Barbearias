@@ -21,7 +21,7 @@ public class UsuarioBarbearia {
     private String email;
 
     private String senha;
-    @Enumerated(EnumType.STRING)
 
+    @Enumerated(EnumType.STRING)
     private Role role;
 }

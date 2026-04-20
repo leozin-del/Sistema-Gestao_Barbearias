@@ -2,6 +2,7 @@ package com.barbearia.BARBEARIAPRO.service;
 
 import com.barbearia.BARBEARIAPRO.Role;
 import com.barbearia.BARBEARIAPRO.entity.UsuarioBarbearia;
+import com.barbearia.BARBEARIAPRO.exception.EmailAlreadyInUseException;
 import com.barbearia.BARBEARIAPRO.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +19,12 @@ public class UsuarioService {
 
     public UsuarioBarbearia criarUsuario(String email, String senha, Role role) {
 
-        // verifica se email já existe
+
         if (usuarioRepository.findByEmail(email).isPresent()) {
-            throw new IllegalArgumentException("E-mail já está em uso.");
+            throw new EmailAlreadyInUseException("Email já esta em uso!");
         }
 
-        // cria o usuário
+
         UsuarioBarbearia usuario = new UsuarioBarbearia(
                 null,
                 email,
