@@ -5,6 +5,7 @@ import com.barbearia.BARBEARIAPRO.DTO.ClienteDTO;
 import com.barbearia.BARBEARIAPRO.DTO.CriarClienteDTO;
 import com.barbearia.BARBEARIAPRO.Role;
 import com.barbearia.BARBEARIAPRO.entity.Cliente;
+import com.barbearia.BARBEARIAPRO.exception.ClientNotFoundException;
 import com.barbearia.BARBEARIAPRO.repository.ClienteRepository;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
@@ -40,12 +41,12 @@ public class ClienteService {
         return new ClienteDTO(clienteCriado.getId(), clienteCriado.getName(), clienteCriado.getTell());
     }
 
-    public Optional<ClienteDTO> listarPorId(Long id) {
-        return clienteRepository.findById(id).map(cliente -> new ClienteDTO(
-                cliente.getId(),
-                cliente.getName(),
-                cliente.getTell()
-        ));
+    public ClienteDTO listarPorId(Long id) {
+                var clienteBuscado = clienteRepository.findById(id)
+                        .orElseThrow(() -> new ClientNotFoundException("Cliente não encontrado!"));
+
+                return new ClienteDTO(clienteBuscado.getId(),
+                        clienteBuscado.getName(), clienteBuscado.getTell());
     }
 
     public List<ClienteDTO> listarClientes() {
@@ -57,22 +58,25 @@ public class ClienteService {
     }
 
     public void atualizarCliente(Long id, AtualizarClienteDTO atualizarClienteDTO) {
-        var clienteBuscado = clienteRepository.findById(id);
-        if (clienteBuscado.isPresent()) {
-            var clienteAchado = clienteBuscado.get();
+        var clienteBuscado = clienteRepository.findById(id)
+                .orElseThrow(() ->  new ClientNotFoundException("Cliente não encontrado!"));
+
 
             if (atualizarClienteDTO.name() != null) {
-                clienteAchado.setName(atualizarClienteDTO.name());
+                clienteBuscado.setName(atualizarClienteDTO.name());
             }
             if (atualizarClienteDTO.tell() != null) {
-                clienteAchado.setTell(atualizarClienteDTO.tell());
+                clienteBuscado.setTell(atualizarClienteDTO.tell());
             }
 
-            clienteRepository.save(clienteAchado);
-        }
+            clienteRepository.save(clienteBuscado);
+
     }
 
     public void deletarCliente(Long id) {
+        if (!clienteRepository.existsById(id)) {
+            throw new ClientNotFoundException("Cliente não encontrado!");
+        }
         clienteRepository.deleteById(id);
     }
 

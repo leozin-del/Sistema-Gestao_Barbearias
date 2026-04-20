@@ -31,11 +31,7 @@ public class ClienteController {
     @GetMapping("/{id}")
     public ResponseEntity<ClienteDTO> listarPorId(@PathVariable Long id) {
         var clienteAchado = clienteService.listarPorId(id);
-        if (clienteAchado.isPresent()) {
-            return ResponseEntity.ok(clienteAchado.get());
-        } else {
-            return ResponseEntity.noContent().build();
-        }
+        return ResponseEntity.ok(clienteAchado);
     }
 
     @GetMapping

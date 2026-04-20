@@ -3,6 +3,7 @@ package com.barbearia.BARBEARIAPRO.service;
 import com.barbearia.BARBEARIAPRO.Role;
 import com.barbearia.BARBEARIAPRO.entity.UsuarioBarbearia;
 import com.barbearia.BARBEARIAPRO.exception.EmailAlreadyInUseException;
+import com.barbearia.BARBEARIAPRO.exception.UserNotFoundException;
 import com.barbearia.BARBEARIAPRO.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class UsuarioService {
     public UsuarioBarbearia criarUsuario(String email, String senha, Role role) {
 
 
-        if (usuarioRepository.findByEmail(email).isPresent()) {
+        if (usuarioRepository.existsByEmail(email)) {
             throw new EmailAlreadyInUseException("Email já esta em uso!");
         }
 
@@ -32,11 +33,10 @@ public class UsuarioService {
                 role
         );
 
-        // salva no banco e retorna
         return usuarioRepository.save(usuario);
     }
 
-    public Optional<UsuarioBarbearia> buscarPorEmail(String email) {
-        return usuarioRepository.findByEmail(email);
+    public UsuarioBarbearia buscarPorEmail(String email) {
+        return usuarioRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
     }
 }
