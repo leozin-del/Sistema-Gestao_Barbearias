@@ -5,6 +5,7 @@ import com.barbearia.BARBEARIAPRO.entity.UsuarioBarbearia;
 import com.barbearia.BARBEARIAPRO.exception.EmailAlreadyInUseException;
 import com.barbearia.BARBEARIAPRO.exception.UserNotFoundException;
 import com.barbearia.BARBEARIAPRO.repository.UsuarioRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -13,9 +14,11 @@ import java.util.Optional;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UsuarioBarbearia criarUsuario(String email, String senha, Role role) {
@@ -29,7 +32,7 @@ public class UsuarioService {
         UsuarioBarbearia usuario = new UsuarioBarbearia(
                 null,
                 email,
-                senha,
+                passwordEncoder.encode(senha),
                 role
         );
 
