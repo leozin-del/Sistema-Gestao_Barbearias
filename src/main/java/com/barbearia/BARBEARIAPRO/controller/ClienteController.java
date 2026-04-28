@@ -3,6 +3,7 @@ package com.barbearia.BARBEARIAPRO.controller;
 import com.barbearia.BARBEARIAPRO.DTO.AtualizarClienteDTO;
 import com.barbearia.BARBEARIAPRO.DTO.ClienteDTO;
 import com.barbearia.BARBEARIAPRO.DTO.CriarClienteDTO;
+import com.barbearia.BARBEARIAPRO.exception.ClientNotFoundException;
 import com.barbearia.BARBEARIAPRO.service.ClienteService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,8 @@ public class ClienteController {
     @GetMapping("/{id}")
     public ResponseEntity<ClienteDTO> listarPorId(@PathVariable Long id) {
         var clienteAchado = clienteService.listarPorId(id);
-        return ResponseEntity.ok(clienteAchado);
+        return clienteAchado.map(ResponseEntity::ok)
+                .orElseThrow(() -> new ClientNotFoundException("Cliente não encontrado!"));
     }
 
     @GetMapping

@@ -4,6 +4,7 @@ import com.barbearia.BARBEARIAPRO.DTO.CriarClienteDTO;
 import com.barbearia.BARBEARIAPRO.DTO.CriarNovoBarbeiroDTO;
 import com.barbearia.BARBEARIAPRO.DTO.LoginRequestDTO;
 import com.barbearia.BARBEARIAPRO.DTO.LoginResponseDTO;
+import com.barbearia.BARBEARIAPRO.config.TokenConfig;
 import com.barbearia.BARBEARIAPRO.service.AuthenticationService;
 import com.barbearia.BARBEARIAPRO.service.BarbeiroService;
 import com.barbearia.BARBEARIAPRO.service.ClienteService;
@@ -19,7 +20,8 @@ public class AuthenticationController {
     private final ClienteService clienteService;
     private final BarbeiroService barbeiroService;
 
-    public AuthenticationController(AuthenticationService authenticationService, 
+
+    public AuthenticationController(AuthenticationService authenticationService,
                                    ClienteService clienteService,
                                    BarbeiroService barbeiroService) {
         this.authenticationService = authenticationService;

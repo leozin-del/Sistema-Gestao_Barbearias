@@ -3,6 +3,7 @@ package com.barbearia.BARBEARIAPRO.controller;
 import com.barbearia.BARBEARIAPRO.DTO.AgendamentoDTO;
 import com.barbearia.BARBEARIAPRO.DTO.CriarAgendamentoDTO;
 import com.barbearia.BARBEARIAPRO.service.AgendamentoService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class AgendamentoController {
     }
 
     @PostMapping
-    public ResponseEntity<AgendamentoDTO> criarNovo(@RequestBody  CriarAgendamentoDTO criarAgendamentoDTO) {
+    public ResponseEntity<AgendamentoDTO> criarNovo( @RequestBody @Valid CriarAgendamentoDTO criarAgendamentoDTO) {
         var agendamentoCriado = agendamentoService.criarNovo(criarAgendamentoDTO);
         URI location = URI.create("/agendamentosBarbearia/" + agendamentoCriado.id());
         return ResponseEntity.created(location).body(agendamentoCriado);

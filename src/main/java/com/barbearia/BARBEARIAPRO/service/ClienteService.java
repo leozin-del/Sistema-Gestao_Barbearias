@@ -41,12 +41,12 @@ public class ClienteService {
         return new ClienteDTO(clienteCriado.getId(), clienteCriado.getName(), clienteCriado.getTell());
     }
 
-    public ClienteDTO listarPorId(Long id) {
+    public Optional<ClienteDTO> listarPorId(Long id) {
                 var clienteBuscado = clienteRepository.findById(id)
                         .orElseThrow(() -> new ClientNotFoundException("Cliente não encontrado!"));
 
-                return new ClienteDTO(clienteBuscado.getId(),
-                        clienteBuscado.getName(), clienteBuscado.getTell());
+                return Optional.of(new ClienteDTO(clienteBuscado.getId(),
+                        clienteBuscado.getName(), clienteBuscado.getTell()));
     }
 
     public List<ClienteDTO> listarClientes() {

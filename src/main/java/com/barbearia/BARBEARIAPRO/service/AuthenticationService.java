@@ -2,37 +2,46 @@ package com.barbearia.BARBEARIAPRO.service;
 
 import com.barbearia.BARBEARIAPRO.DTO.LoginRequestDTO;
 import com.barbearia.BARBEARIAPRO.DTO.LoginResponseDTO;
+import com.barbearia.BARBEARIAPRO.config.TokenConfig;
 import com.barbearia.BARBEARIAPRO.entity.UsuarioBarbearia;
-import com.barbearia.BARBEARIAPRO.exception.UserNotFoundException;
-import com.barbearia.BARBEARIAPRO.repository.UsuarioRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthenticationService {
 
-    private final UsuarioRepository usuarioRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final TokenConfig tokenConfig;
 
-    public AuthenticationService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
-        this.usuarioRepository = usuarioRepository;
-        this.passwordEncoder = passwordEncoder;
+    public AuthenticationService(AuthenticationManager authenticationManager, TokenConfig tokenConfig) {
+        this.authenticationManager = authenticationManager;
+        this.tokenConfig = tokenConfig;
     }
 
     public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
-        UsuarioBarbearia usuario = usuarioRepository.findByEmail(loginRequestDTO.email())
-                .orElseThrow(() -> new UserNotFoundException("Usuário ou senha inválidos"));
 
-        // Validar senha (comparação simples - em produção usar BCrypt)
-        if (!passwordEncoder.matches(loginRequestDTO.senha(), usuario.getSenha())) {
-            throw new UserNotFoundException("Usuário ou senha inválidos");
-        }
+        UsernamePasswordAuthenticationToken userAndPass =
+                new UsernamePasswordAuthenticationToken(
+                        loginRequestDTO.email(),
+                        loginRequestDTO.senha()
+                );
 
+        Authentication authentication =
+                authenticationManager.authenticate(userAndPass);
+
+        UsuarioBarbearia usuario =
+                (UsuarioBarbearia) authentication.getPrincipal();
+
+        String token = tokenConfig.generateToken(usuario);
+        
         return new LoginResponseDTO(
                 usuario.getId(),
                 usuario.getEmail(),
                 usuario.getRole(),
-                "Login realizado com sucesso!"
+                "Login realizado com sucesso!",
+                token
         );
     }
 }

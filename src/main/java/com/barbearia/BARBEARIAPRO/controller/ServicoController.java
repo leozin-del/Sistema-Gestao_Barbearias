@@ -34,7 +34,7 @@ public class ServicoController {
         if (servicoAchado.isPresent()) {
             return ResponseEntity.ok(servicoAchado.get());
         } else {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
     }
 
