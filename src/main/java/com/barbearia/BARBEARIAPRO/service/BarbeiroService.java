@@ -3,8 +3,10 @@ package com.barbearia.BARBEARIAPRO.service;
 import com.barbearia.BARBEARIAPRO.DTO.AtualizarBarbeiroDTO;
 import com.barbearia.BARBEARIAPRO.DTO.BarbeiroDTO;
 import com.barbearia.BARBEARIAPRO.DTO.CriarNovoBarbeiroDTO;
+import com.barbearia.BARBEARIAPRO.DTO.ServicoDTO;
 import com.barbearia.BARBEARIAPRO.Role;
 import com.barbearia.BARBEARIAPRO.entity.Barbeiro;
+import com.barbearia.BARBEARIAPRO.entity.Servico;
 import com.barbearia.BARBEARIAPRO.repository.BarbeiroRepository;
 import org.springframework.stereotype.Service;
 
@@ -75,5 +77,12 @@ public class BarbeiroService {
 
     public void deletarBarbeiro(Long id) {
         barbeiroRepository.deleteById(id);
+    }
+
+    private BarbeiroDTO mapToDTO(Barbeiro barbeiro) {
+        return new BarbeiroDTO(barbeiro.getId(),
+                barbeiro.getName(),
+                barbeiro.getEspecialidade());
+
     }
 }

@@ -26,30 +26,18 @@ public class ServicoService {
 
         Servico servicoSalvo = servicoRepository.save(servico);
 
-        return new ServicoDTO(
-                servicoSalvo.getId(),
-                servicoSalvo.getName(),
-                servicoSalvo.getPreco()
-        );
+        return mapToDTO(servicoSalvo);
     }
 
     public Optional<ServicoDTO> listarPorId(Long id) {
         return servicoRepository.findById(id)
-                .map(servico -> new ServicoDTO(
-                        servico.getId(),
-                        servico.getName(),
-                        servico.getPreco()
-                ));
+                .map(this::mapToDTO);
     }
 
     public List<ServicoDTO> listarTodos() {
         return servicoRepository.findAll()
                 .stream()
-                .map(servico -> new ServicoDTO(
-                        servico.getId(),
-                        servico.getName(),
-                        servico.getPreco()
-                ))
+                .map(this::mapToDTO)
                 .toList();
     }
 
@@ -68,6 +56,12 @@ public class ServicoService {
             throw new RuntimeException("Serviço não encontrado");
         }
         servicoRepository.deleteById(id);
+    }
+
+    private ServicoDTO mapToDTO(Servico servico) {
+        return new ServicoDTO(servico.getId(),
+                servico.getName(),
+                servico.getPreco());
     }
 }
 

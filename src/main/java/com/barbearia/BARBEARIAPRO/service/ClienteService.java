@@ -38,23 +38,19 @@ public class ClienteService {
 
         var clienteCriado = clienteRepository.save(cliente);
 
-        return new ClienteDTO(clienteCriado.getId(), clienteCriado.getName(), clienteCriado.getTell());
+        return mapToDTO(clienteCriado);
     }
 
-    public Optional<ClienteDTO> listarPorId(Long id) {
+    public ClienteDTO listarPorId(Long id) {
                 var clienteBuscado = clienteRepository.findById(id)
                         .orElseThrow(() -> new ClientNotFoundException("Cliente não encontrado!"));
 
-                return Optional.of(new ClienteDTO(clienteBuscado.getId(),
-                        clienteBuscado.getName(), clienteBuscado.getTell()));
+                return mapToDTO(clienteBuscado);
     }
 
     public List<ClienteDTO> listarClientes() {
-        return clienteRepository.findAll().stream().map(cliente -> new ClienteDTO(
-                cliente.getId(),
-                cliente.getName(),
-                cliente.getTell()
-        )).toList();
+        return clienteRepository.findAll().stream().map(this::mapToDTO)
+                .toList();
     }
 
     public void atualizarCliente(Long id, AtualizarClienteDTO atualizarClienteDTO) {
@@ -79,5 +75,12 @@ public class ClienteService {
         }
         clienteRepository.deleteById(id);
     }
+
+    private ClienteDTO mapToDTO(Cliente cliente) {
+        return new ClienteDTO(cliente.getId(),
+                cliente.getName(),
+                cliente.getTell());
+    }
+
 
 }

@@ -63,70 +63,28 @@ public class AgendamentoService {
         agendamento.setServico(servico);
         agendamento.setStatus(StatusAgendamento.AGENDADO);
 
-        Agendamento salvo = agendamentoRepository.save(agendamento);
+        Agendamento agendamentosalvo = agendamentoRepository.save(agendamento);
 
-        return new AgendamentoDTO(
-                salvo.getId(),
-                salvo.getDataHora(),
-                salvo.getCliente().getName(),
-                salvo.getBarbeiro().getName(),
-                salvo.getServico().getName(),
-                salvo.getStatus()
-        );
+        return mapToDTO(agendamentosalvo);
     }
 
     public Optional<AgendamentoDTO> listarPorId(Long id) {
         return agendamentoRepository.findById(id)
-                .map(agendamento -> new AgendamentoDTO(
-                        agendamento.getId(),
-                        agendamento.getDataHora(),
-                        agendamento.getCliente().getName(),
-                        agendamento.getBarbeiro().getName(),
-                        agendamento.getServico().getName(),
-                        agendamento.getStatus()
-                ));
+                .map(this::mapToDTO);
     }
 
     public List<AgendamentoDTO> listarPorBarbeiro(Long barbeiroId) {
-
-        List<Agendamento> agendamentos =
-                agendamentoRepository.findByBarbeiroId(barbeiroId);
-
-        List<AgendamentoDTO> resultado = new ArrayList<>();
-
-        for (Agendamento agendamento : agendamentos) {
-            resultado.add(new AgendamentoDTO(
-                    agendamento.getId(),
-                    agendamento.getDataHora(),
-                    agendamento.getCliente().getName(),
-                    agendamento.getBarbeiro().getName(),
-                    agendamento.getServico().getName(),
-                    agendamento.getStatus()
-            ));
-        }
-
-        return resultado;
+        return agendamentoRepository.findByBarbeiroId(barbeiroId)
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
     }
 
     public List<AgendamentoDTO> listarPorCliente(Long clienteId) {
-
-        List<Agendamento> agendamentos =
-                agendamentoRepository.findByClienteId(clienteId);
-
-        List<AgendamentoDTO> resultado = new ArrayList<>();
-
-        for (Agendamento agendamento : agendamentos) {
-            resultado.add(new AgendamentoDTO(
-                    agendamento.getId(),
-                    agendamento.getDataHora(),
-                    agendamento.getCliente().getName(),
-                    agendamento.getBarbeiro().getName(),
-                    agendamento.getServico().getName(),
-                    agendamento.getStatus()
-            ));
-        }
-
-        return resultado;
+        return agendamentoRepository.findByClienteId(clienteId)
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
     }
 
     public void cancelar(Long id) {
