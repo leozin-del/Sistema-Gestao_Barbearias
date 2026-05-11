@@ -150,10 +150,8 @@ Este projeto foi desenvolvido com foco em:
 
 ## 🚀 Possíveis Melhorias Futuras
 
-- [ ] 🔐 Autenticação com **JWT**
 - [ ] 📊 **Dashboard** administrativo
 - [ ] 🌐 **Frontend** (React ou Angular)
-- [ ] 📅 Controle de **horários disponíveis**
 - [ ] 💳 Integração com **pagamentos**
 
 ---
