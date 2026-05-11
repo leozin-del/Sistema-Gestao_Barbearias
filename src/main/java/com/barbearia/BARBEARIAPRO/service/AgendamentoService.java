@@ -45,8 +45,10 @@ public class AgendamentoService {
         Barbeiro barbeiro = barbeiroRepository.findById(dto.barbeiroId())
                 .orElseThrow(() -> new RuntimeException("Barbeiro não encontrado"));
 
-        Servico servico = servicoRepository.findById(dto.servicoId())
-                .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
+        List<Servico> servicos = servicoRepository.findAllById(dto.servicoIds());
+        if (servicos.size() != dto.servicoIds().size()) {
+            throw new RuntimeException("Um ou mais serviços não encontrados");
+        }
 
         boolean horarioOcupado =
                 agendamentoRepository.existsByBarbeiroAndDataHora(barbeiro, dto.dataHora());
@@ -60,7 +62,7 @@ public class AgendamentoService {
         agendamento.setDataHora(dto.dataHora());
         agendamento.setCliente(cliente);
         agendamento.setBarbeiro(barbeiro);
-        agendamento.setServico(servico);
+        agendamento.setServicos(servicos);
         agendamento.setStatus(StatusAgendamento.AGENDADO);
 
         Agendamento agendamentosalvo = agendamentoRepository.save(agendamento);
@@ -103,7 +105,7 @@ public class AgendamentoService {
                 agendamento.getDataHora(),
                 agendamento.getCliente().getName(),
                 agendamento.getBarbeiro().getName(),
-                agendamento.getServico().getName(),
+                agendamento.getServicos().stream().map(Servico::getName).toList(),
                 agendamento.getStatus()
         );
     }

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -28,9 +29,13 @@ public class Agendamento {
     @JoinColumn(name = "barbeiro_id")
     private Barbeiro barbeiro;
 
-    @ManyToOne
-    @JoinColumn(name = "servico_id")
-    private Servico servico;
+    @ManyToMany
+    @JoinTable(
+            name = "agendamento_servicos",
+            joinColumns = @JoinColumn(name = "agendamento_id"),
+            inverseJoinColumns = @JoinColumn(name = "servico_id")
+    )
+    private List<Servico> servicos;
 
     @Enumerated(EnumType.STRING)
     private StatusAgendamento status;
