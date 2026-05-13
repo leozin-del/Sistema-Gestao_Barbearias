@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: Barbearia_PRO!!
+  
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/barbeariapro?useSSL=false&serverTimezone=UTC}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:MONELFALMA}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:com.mysql.cj.jdbc.Driver}
+  
+  jpa:
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+    show-sql: ${SPRING_JPA_SHOW_SQL:true}
+
+api:
+  security:
+    token:
+      secret: ${API_SECURITY_TOKEN_SECRET:sua-chave-secreta-super-segura-aqui-minimum-256-bits-recomendado}
+

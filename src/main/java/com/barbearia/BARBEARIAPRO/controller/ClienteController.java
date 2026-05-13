@@ -27,13 +27,14 @@ public class ClienteController {
         var clienteCriado = clienteService.criarCliente(criarClienteDTO);
         URI location = URI.create("/clientesBarbearia/" + clienteCriado.id());
         return ResponseEntity.created(location).body(clienteCriado);
+
     }
+    
 
     @GetMapping("/{id}")
     public ResponseEntity<ClienteDTO> listarPorId(@PathVariable Long id) {
         var clienteAchado = clienteService.listarPorId(id);
-        return clienteAchado.map(ResponseEntity::ok)
-                .orElseThrow(() -> new ClientNotFoundException("Cliente não encontrado!"));
+        return ResponseEntity.ok(clienteAchado);
     }
 
     @GetMapping

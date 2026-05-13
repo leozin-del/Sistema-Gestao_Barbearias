@@ -11,7 +11,7 @@ import java.time.Instant;
 @Component
 public class TokenConfig {
 
-    @Value("${api.security.secret}")
+    @Value("${api.security.token.secret}")
     private String secret;
 
     public String generateToken(UsuarioBarbearia usuarioBarbearia) {

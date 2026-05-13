@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,11 +17,11 @@ import java.io.IOException;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final TokenConfig tokenConfig;
-    private final AuthConfig authConfig;
+    private final ObjectProvider<AuthConfig> authConfigProvider;
 
-    public JwtAuthFilter(TokenConfig tokenConfig, AuthConfig authConfig) {
+    public JwtAuthFilter(TokenConfig tokenConfig, ObjectProvider<AuthConfig> authConfigProvider) {
         this.tokenConfig = tokenConfig;
-        this.authConfig = authConfig;
+        this.authConfigProvider = authConfigProvider;
     }
 
     @Override
@@ -37,7 +38,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 String email = tokenConfig.validateToken(token);
 
                 if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UserDetails userDetails = authConfig.loadUserByUsername(email);
+                    UserDetails userDetails = authConfigProvider.getObject().loadUserByUsername(email);
 
                     UsernamePasswordAuthenticationToken auth =
                             new UsernamePasswordAuthenticationToken(

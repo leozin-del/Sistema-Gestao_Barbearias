@@ -43,7 +43,7 @@ class ClienteServiceTest {
         @Test
         @DisplayName("DeveCriarNovoCliente")
         void deveCriarCliente() {
-            var criarClienteInput = new  CriarClienteDTO("Leo",
+            var criarClienteInput = new  CriarClienteDTO("leo",
                     "61996178447",
                     "leo@gmail.com",
                     "123456");
@@ -91,9 +91,9 @@ class ClienteServiceTest {
 
             var resultado = clienteService.listarPorId(id);
 
-            assertTrue(resultado.isPresent());
-            assertEquals("Leo", resultado.get().name());
-            assertEquals("61996178447", resultado.get().tell());
+            assertNotNull(resultado);
+            assertEquals("Leo", resultado.name());
+            assertEquals("61996178447", resultado.tell());
 
         }
     }
